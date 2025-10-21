@@ -1,8 +1,8 @@
 import { db} from "./guitarras.js"
 
-const Carrito = []
 const divContainer = document.querySelector('main div')
 const carritoContainer = document.querySelector('#carrito')
+let Carrito = []
 
 const createCard = (guitar) => {
     const div = document.createElement('div')
@@ -42,7 +42,7 @@ const createCart = (Carrito) => {
                     <tbody>`
     Carrito.forEach(g => {
         total += g.precio * g.cantidad
-        html += `<tr>
+        html += `<tr data-id="${g.id}">
                     <td>
                         <img class="img-fluid" src="./img/${g.imagen}.jpg" alt="imagen guitarra">
                     </td>
@@ -104,7 +104,22 @@ const buttonClicked = (e) => {
 const carritoClicked = (e) => {
     if(e.target.classList.contains('btn')){
         const btn = e.target.innerText
-        console.log(btn)
+        const idCarrito = e.target.parentElement.parentElement.getAttribute('data-id')
+        const idxCarrito = Carrito.findIndex(g => g.id === Number(idCarrito))
+        if(btn === '-'){
+            if(Carrito[idxCarrito].cantidad > 1){
+                Carrito[idxCarrito].cantidad--
+            }
+        } else if (btn === '+'){
+            if(Carrito[idxCarrito].cantidad < 10){
+                Carrito[idxCarrito].cantidad++
+            }
+        }else if (btn === 'X'){
+            Carrito = Carrito.filter(g => g.id !== Number(idCarrito))
+        } else if (btn === 'Vaciar Carrito'.toUpperCase()){
+            Carrito = []
+        }
+        createCart(Carrito)
     }
 }
 //Iterar arrays
