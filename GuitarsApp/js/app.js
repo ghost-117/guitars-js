@@ -2,6 +2,7 @@ import { db} from "./guitarras.js"
 
 const divContainer = document.querySelector('main div')
 const carritoContainer = document.querySelector('#carrito')
+const btnVAI = document.querySelector('#VAI')
 let Carrito = []
 
 const createCard = (guitar) => {
@@ -98,6 +99,7 @@ const buttonClicked = (e) => {
             //Si si, incrementa cantidad
             Carrito[idCarrito].cantidad++
         }
+        setLocalStorage()
         createCart(Carrito)
     }
 }
@@ -129,10 +131,26 @@ const carritoClicked = (e) => {
 //     console.log(db[i].nombre)
 // }
 //Metodos de Arrays para iterar
+const getLocalStorage = () => {
+    const carritoStorage = localStorage.getItem('Carrito')
+    if(carritoStorage){
+        Carrito = JSON.parse(carritoStorage)
+    } else{
+        Carrito = []
+    }
+}
+
+const setLocalStorage = () => {
+    localStorage.setItem('Carrito', JSON.stringify(Carrito))
+}
+
 db.forEach((guitar) => {
     console.log(guitar.nombre)
     divContainer.appendChild(createCard(guitar))
 })
+getLocalStorage()
 createCart(Carrito)
+
 divContainer.addEventListener('click', buttonClicked)
 carritoContainer.addEventListener('click', carritoClicked)
+btnVAI.addEventListener('click', buttonClicked)
